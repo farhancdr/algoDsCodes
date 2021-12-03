@@ -1,4 +1,5 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+
 using namespace std;
 
 void DepthFirstSearch(vector<vector<int>>& mat, int i, int j, int row, int col)
