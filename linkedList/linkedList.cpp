@@ -1,267 +1,268 @@
-#include<bits/stdc++.h>
+#include "bits/stdc++.h"
 
 using namespace std;
 
-class node
-{
-public:
-    int v;
-    node *next;
-    node()
-    {
-        next = NULL;
-    }
+//define a linked list
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
-class LinkedList
+//insert node at the end of the list
+void insertNodeAtEnd(ListNode *&head, int data) {
+    ListNode *newNode = new ListNode(data);
+    if (head == nullptr) {
+        head = newNode;
+        return;
+    }
+    ListNode *temp = head;
+    while (temp->next != nullptr) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+
+//insert node at the beginning of the list
+void insertNodeAtBeginning(ListNode *&head, int data) {
+    ListNode *newNode = new ListNode(data);
+    newNode->next = head;
+    head = newNode;
+}
+
+//insert at a given position
+void insertNodeAtPosition(ListNode *&head, int data, int position) {
+    ListNode *newNode = new ListNode(data);
+    if (position == 0) {
+        insertNodeAtBeginning(head, data);
+        return;
+    }
+    ListNode *temp = head;
+    for (int i = 0; i < position - 1; i++) {
+        temp = temp->next;
+    }
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
+
+//delete the first node
+void deleteFirstNode(ListNode *&head) {
+    if (head == nullptr) {
+        return;
+    }
+    ListNode *temp = head;
+    head = head->next;
+    delete temp;
+}
+
+//delete the last node
+void deleteLastNode(ListNode *&head) {
+    if (head == nullptr) {
+        return;
+    }
+    ListNode *temp = head;
+    while (temp->next->next != nullptr) {
+        temp = temp->next;
+    }
+    delete temp->next;
+    temp->next = nullptr;
+}
+
+//print the list
+void printList(ListNode *head) {
+    ListNode *temp = head;
+    while (temp != nullptr) {
+        cout << temp->val << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+//get node at a given position
+ListNode *getNodeAtPosition(ListNode *head, int position) {
+    ListNode *temp = head;
+    for (int i = 0; i < position; i++) {
+        temp = temp->next;
+    }
+    return temp;
+}
+
+//get the middle node
+ListNode *getMiddleNode(ListNode *head) {
+    ListNode *slow = head;
+    ListNode *fast = head;
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
+
+//get the length of the list
+int getLengthOfList(ListNode *head) {
+    int length = 0;
+    ListNode *temp = head;
+    while (temp != nullptr) {
+        length++;
+        temp = temp->next;
+    }
+    return length;
+}
+
+//search for a node in the list
+bool searchNode(ListNode *head, int data) {
+    ListNode *temp = head;
+    while (temp != nullptr) {
+        if (temp->val == data) {
+            return true;
+        }
+        temp = temp->next;
+    }
+    return false;
+}
+
+//merge two sorted lists
+ListNode* merge(ListNode* l1, ListNode* l2) {
+    ListNode *cur=new ListNode(0);
+    ListNode *temp=cur;
+    while(l1 && l2) {
+        if(l1->val < l2->val) {
+            cur->next=l1;
+            l1=l1->next;
+        }
+        else {
+            cur->next=l2;
+            l2=l2->next;
+        }
+        cur=cur->next;
+    }
+    if(l1) cur->next=l1;
+    if(l2) cur->next=l2;
+    return temp->next;
+}
+
+// sort the linked list using merge sort
+void mergeSort(ListNode *&head) {
+    if(head == nullptr || head->next == nullptr) {
+        return;
+    }
+    ListNode *slow=head, *fast=head->next;
+    while(fast && fast->next) {
+        slow=slow->next;
+        fast=fast->next->next;
+    }
+    ListNode *temp=slow->next;
+    slow->next=nullptr;
+    mergeSort(head);
+    mergeSort(temp);
+    head=merge(head, temp);
+}
+
+//reverse a linked list
+void reverseList(ListNode *&head) {
+    ListNode *prev = nullptr;
+    ListNode *curr = head;
+    ListNode *next;
+    while (curr != nullptr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    head = prev;
+}
+
+//check if linked list is a palindrome
+bool isPalindrome(ListNode *head) {
+    ListNode *slow = head;
+    ListNode *fast = head;
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    ListNode *secondHalf = slow->next;
+    slow->next = nullptr;
+    reverseList(secondHalf);
+    ListNode *firstHalf = head;
+    while (secondHalf != nullptr) {
+        if (firstHalf->val != secondHalf->val) {
+            return false;
+        }
+        firstHalf = firstHalf->next;
+        secondHalf = secondHalf->next;
+    }
+    return true;
+}
+
+
+//convert an array to a linked list
+ListNode *convertArrayToList(int *array, int length) {
+    ListNode *head = nullptr;
+    for (int i = 0; i < length; i++) {
+        insertNodeAtEnd(head, array[i]);
+    }
+    return head;
+}
+
+//convert a linked list to an array
+int *convertListToArray(ListNode *head) {
+    int *array = new int[getLengthOfList(head)];
+    ListNode *temp = head;
+    int i = 0;
+    while (temp != nullptr) {
+        array[i++] = temp->val;
+        temp = temp->next;
+    }
+    return array;
+}
+
+//convert a linked list to a string
+string convertListToString(ListNode *head) {
+    string str = "";
+    ListNode *temp = head;
+    while (temp != nullptr) {
+        str += to_string(temp->val);
+        temp = temp->next;
+    }
+    return str;
+}
+
+
+//odd even linked list
+ListNode *oddEvenList(ListNode *head) {
+    ListNode *odd = head;
+    ListNode *even = head->next;
+    ListNode *evenHead = even;
+    while (even != nullptr && even->next != nullptr) {
+        odd->next = even->next;
+        odd = odd->next;
+        even->next = odd->next;
+        even = even->next;
+    }
+    odd->next = evenHead;
+    return head;
+}
+
+
+
+int main(int argc, char const *argv[])
 {
-    node *head;
+    /* code */
+    int array[] = {5,8,4,3,9,2,1,10};
+    ListNode *head = convertArrayToList(array, 8);
+    printList(head);
+    
+    mergeSort(head);
+    
+    printList(head);
+    
+    // ListNode *head = oddEvenList(head);  
+    // printList(head);
+    // cout << isPalindrome(head) << endl;
+    // cout << convertListToString(head) << endl;
+    
 
-public:
-    LinkedList()
-    {
-        head = NULL;
-    }
-
-    void insert_at_beginning(int v)
-    {
-        node *temp = new node();
-        temp->v = v;
-        temp->next = head;
-        head = temp;
-    }
-
-    void insert_at_end(int v)
-    {
-        node *temp = new node();
-        temp->v = v;
-        if (head == NULL)
-        {
-            // if linked list is empty
-            // make temp the new head
-            head = temp;
-        }
-        else
-        {
-            // if linked list is not empty
-            // go to the last node of the linked list
-            node *ptr = head;
-            // the loop sets ptr to last node of the linked list
-            while (ptr->next != NULL)
-            {
-                ptr = ptr->next;
-            }
-            // ptr now points to the last node of the linked list
-            // store temp in the next of ptr
-            ptr->next = temp;
-        }
-    }
-
-    void insert_at_given_position(int v, int p)
-    {
-        node *temp = new node();
-        temp->v = v;
-        if (p == 0)
-        {
-            // if p==0 then insert temp at beginning
-            temp->next = head;
-            head = temp;
-        }
-        else
-        {
-            node *ptr = head;
-            // the loop sets ptr to (p-1)th node
-            while (p > 1)
-            {
-                ptr = ptr->next;
-                --p;
-            }
-            // ptr now points to (p-1)th node
-            // insert temp between (p-1)th and pth node
-            temp->next = ptr->next;
-            ptr->next = temp;
-        }
-    }
-
-    void delete_at_beginning()
-    {
-        if (head == NULL)
-        {
-            cout << "List is Empty" << endl;
-        }
-        else
-        {
-            cout << "Element Deleted: " << head->v << endl;
-            // if linked list is not empty
-            // store address of first node of the linked list in temp
-            node *temp = head;
-            // set second node as the new head of the linked list
-            head = head->next;
-            // free the old head
-            delete (temp);
-        }
-    }
-
-    void delete_at_end()
-    {
-        if (head == NULL)
-        {
-            cout << "List is Empty" << endl;
-        }
-        else if (head->next == NULL)
-        {
-            // if there's only 1 node in the linked list
-            // free head and set it to NULL
-            cout << "Element Deleted: " << head->v << endl;
-            delete (head);
-            head = NULL;
-        }
-        else
-        {
-            // if there's more than 1 node in the linked
-            // traverse to 2nd last node of the linked list
-            node *temp = head;
-            // the loop sets temp to 2nd last node of the linked list
-            while (temp->next->next != NULL)
-            {
-                temp = temp->next;
-            }
-            // temp now points to the 2nd last node of the linked list
-            cout << "Element Deleted: " << temp->next->v << endl;
-            // delete last node
-            delete (temp->next);
-            // set the next of 2nd last node to NULL
-            temp->next = NULL;
-        }
-    }
-
-    void delete_at_given_position(int p)
-    {
-        if (head == NULL)
-        {
-            // if list is empty do nothing
-            cout << "List is Empty" << endl;
-        }
-        else
-        {
-            node *temp, *ptr;
-            if (p == 0)
-            {
-                // if p==0, perform delete at beginning
-                cout << "Element Deleted: " << head->v << endl;
-                ptr = head;
-                head = head->next;
-                delete (ptr);
-            }
-            else
-            {
-                // if p > 0
-                // set ptr to pth node and temp to (p-1)th node
-                temp = ptr = head;
-                while (p > 0)
-                {
-                    --p;
-                    temp = ptr;
-                    ptr = ptr->next;
-                }
-                cout << "Element Deleted: " << ptr->v << endl;
-                // set next of (p-1)th node to next of pth node
-                temp->next = ptr->next;
-                // free pth node
-                free(ptr);
-            }
-        }
-    }
-
-    void print()
-    {
-        if (head == NULL)
-        {
-            cout << "List is empty" << endl;
-        }
-        else
-        {
-            node *temp = head;
-            cout << "Linked List: ";
-            while (temp != NULL)
-            {
-                cout << temp->v << "->";
-                temp = temp->next;
-            }
-            cout << "NULL" << endl;
-        }
-    }
-    int middleOfLinkedList(){
-        if(!head) return -1;
-        node* slow = head;
-        node* fast = head;
-
-        while (fast and fast->next)
-        {
-            slow = slow->next;
-            fast = fast->next->next;
-        }
-        return slow->v;
-    }
-};
-
-int main()
-{
-
-    printf("1 to Insert at the beginning");
-    printf("\n2 to Insert at the end");
-    printf("\n3 to Insert at mid");
-    printf("\n4 to Delete from beginning");
-    printf("\n5 to Delete from the end");
-    printf("\n6 to Delete from mid");
-    printf("\n7 to Display");
-    printf("\n0 to Exit");
-
-    int choice, v, p;
-    LinkedList ll;
-    do
-    {
-        cout << "\nEnter Your Choice: ";
-        cin >> choice;
-        switch (choice)
-        {
-        case 1:
-            cout << "Enter Element: ";
-            cin >> v;
-            ll.insert_at_beginning(v);
-            break;
-
-        case 2:
-            cout << "Enter Element: ";
-            cin >> v;
-            ll.insert_at_end(v);
-            break;
-
-        case 3:
-            cout << "Enter Element: ";
-            cin >> v;
-            cout << "Enter Position ( zero-indexed ): ";
-            cin >> p;
-            ll.insert_at_given_position(v, p);
-            break;
-
-        case 4:
-            ll.delete_at_beginning();
-            break;
-
-        case 5:
-            ll.delete_at_end();
-            break;
-
-        case 6:
-            cout << "Enter Position ( zero-indexed ): ";
-            cin >> p;
-            ll.delete_at_given_position(p);
-            break;
-
-        case 7:
-            ll.print();
-            break;
-        }
-    } while (choice != 0);
+    return 0;
 }
