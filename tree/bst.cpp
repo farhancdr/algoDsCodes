@@ -1,118 +1,127 @@
-// Binary Search Tree operations in C++
-
-#include <iostream>
+#include<bits/stdc++.h>
 using namespace std;
 
-struct node
-{
-    int key;
-    struct node *left, *right;
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-// Create a node
-struct node *newNode(int item)
-{
-    node *temp = new node();
-    temp->key = item;
-    temp->left = temp->right = NULL;
-    return temp;
+// insert to binary tree
+TreeNode* insert(TreeNode* root, int val) {
+    if(root == nullptr) return new TreeNode(val);
+    if(val < root->val) root->left = insert(root->left, val);
+    else root->right = insert(root->right, val);
+    return root;
 }
 
-// Inorder Traversal
-void inorder(struct node *root)
-{
-    if (root != NULL)
-    {
-        // Traverse left
-        inorder(root->left);
-
-        // Traverse root
-        cout << root->key << " -> ";
-
-        // Traverse right
-        inorder(root->right);
-    }
+// inorder traversal of binary tree
+TreeNode* inorder(TreeNode* root) {
+    if(root == nullptr) return nullptr;
+    root->left = inorder(root->left);
+    cout << root->val << " ";
+    root->right = inorder(root->right);
+    return root;
 }
 
-// Insert a node
-struct node *insert(struct node *node, int key)
-{
-    // Return a new node if the tree is empty
-    if (node == NULL)
-        return newNode(key);
-
-    // Traverse to the right place and insert the node
-    if (key < node->key)
-        node->left = insert(node->left, key);
-    else
-        node->right = insert(node->right, key);
-
-    return node;
+//get the minimum value in the binary tree
+TreeNode* minValue(TreeNode* root) {
+    if(root == nullptr) return nullptr;
+    while(root->left != nullptr) root = root->left;
+    return root;
 }
 
-// Find the inorder successor
-struct node *minValueNode(struct node *node)
-{
-    struct node *current = node;
-
-    // Find the leftmost leaf
-    while (current && current->left != NULL)
-        current = current->left;
-
-    return current;
+//get the maximum value in the binary tree
+int maxValue(TreeNode* root) {
+    if(root == nullptr) return INT_MIN;
+    while(root->right != nullptr) root = root->right;
+    return root->val;
 }
 
-// Deleting a node
-struct node *deleteNode(struct node *root, int key)
-{
-    // Return if the tree is empty
-    if (root == NULL)
-        return root;
+//delete a node from the binary tree
 
-    // Find the node to be deleted
-    if (key < root->key)
-        root->left = deleteNode(root->left, key);
-    else if (key > root->key)
-        root->right = deleteNode(root->right, key);
-    else
-    {
-        // If the node is with only one child or no child
-        if (root->left == NULL)
-        {
-            struct node *temp = root->right;
-            free(root);
+TreeNode* deleteNode(TreeNode* root, int val) {
+    if(root == nullptr) return nullptr;
+    if(val < root->val) root->left = deleteNode(root->left, val);
+    else if(val > root->val) root->right = deleteNode(root->right, val);
+    else {
+        if(root->left == nullptr) {
+            TreeNode* temp = root->right;
+            delete root;
             return temp;
         }
-        else if (root->right == NULL)
-        {
-            struct node *temp = root->left;
-            free(root);
+        else if(root->right == nullptr) {
+            TreeNode* temp = root->left;
+            delete root;
             return temp;
         }
-
-        // If the node has two children
-        struct node *temp = minValueNode(root->right);
-
-        // Place the inorder successor in position of the node to be deleted
-        root->key = temp->key;
-
-        // Delete the inorder successor
-        root->right = deleteNode(root->right, temp->key);
+        TreeNode* temp = minValue(root->right);
+        root->val = temp->val;
+        root->right = deleteNode(root->right, temp->val);
     }
     return root;
 }
 
-// Driver code
-int main()
-{
-    struct node *root = NULL;
-    root = insert(root, 1);
-    root = insert(root, 3);
-    root = insert(root, 6);
-    root = insert(root, 4);
-    root = insert(root, 10);
-    root = insert(root, 8);
+//get height of the binary tree
+int height(TreeNode* root) {
+    if(root == nullptr) return 0;
+    return 1 + max(height(root->left), height(root->right));
+}
 
-    cout << "Inorder traversal: ";
-    inorder(root);
+//count leaves in the binary tree
+int countLeaves(TreeNode* root) {
+    if(root == nullptr) return 0;
+    if(root->left == nullptr && root->right == nullptr) return 1;
+    return countLeaves(root->left) + countLeaves(root->right);
+}
+
+
+
+//graphical representation of the binary tree
+void printTree(TreeNode* root) {
+    if(root == nullptr) return;
+    queue<TreeNode*> q;
+    q.push(root);
+    q.push(nullptr);
+    while(!q.empty()) {
+        TreeNode* temp = q.front();
+        q.pop();
+        if(temp == nullptr) {
+            cout << endl;
+            if(!q.empty()) q.push(nullptr);
+        }
+        else {
+            cout << temp->val << " ";
+            if(temp->left) q.push(temp->left);
+            if(temp->right) q.push(temp->right);
+        }
+    }
+}
+
+
+int main(int argc, const char** argv) {
+
+    TreeNode* root = NULL;
+    root = insert(root, -1);
+    root = insert(root, 3);
+    root = insert(root, -15);
+    root = insert(root, 4);
+    root = insert(root, 8);
+    root = insert(root, 9);
+    root = insert(root, 11);
+    root = insert(root, 7);
+    // deleteNode(root, 8);
+    // inorder(root);
+ 
+    cout<< maxValue(root) << endl;
+    cout<< minValue(root) << endl;
+    
+    // cout<< height(root) << endl;
+
+    // printTree(root);
+    
+    return 0;
 }
