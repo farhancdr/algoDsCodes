@@ -1,41 +1,40 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector <int> adj[10];
-bool visited[10];
+#define optimize() ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 
-void dfs(int s) {
-    visited[s] = true;
-    for (int i = 0;i < adj[s].size();++i) {
-        if (visited[adj[s][i]] == false)
-            dfs(adj[s][i]);
-    }
-}
+const int mx = 1e5+123;
+bool vis[mx];
+vector<int> adj[mx];
 
-void initialize() {
-    for (int i = 0;i < 10;++i)
-        visited[i] = false;
-}
+void dfs ( int u )
+{
+    cout<<u<<" ";
+    vis[u] =  1;
 
-int main() {
-    int nodes, edges, x, y, connectedComponents = 0;
-    cin >> nodes;                       //Number of nodes
-    cin >> edges;                       //Number of edges
-    for (int i = 0;i < edges;++i) {
-        cin >> x >> y;
-        //Undirected Graph 
-        adj[x].push_back(y);                   //Edge from vertex x to vertex y
-        adj[y].push_back(x);                   //Edge from vertex y to vertex x
-    }
-
-    initialize();                           //Initialize all nodes as not visited
-
-    for (int i = 1;i <= nodes;++i) {
-        if (visited[i] == false) {
-            dfs(i);
-            connectedComponents++;
+    for ( auto v : adj[u] ) {
+        if ( vis[v] == 0 ) {
+            dfs ( v );
         }
     }
-    cout << "Number of connected components: " << connectedComponents << endl;
+
+    return;
+}
+
+int main()
+{
+    optimize();
+
+    int n, m;
+    cin >> n >> m;
+
+    for ( int i = 1; i <= m; i++ ) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back ( v );
+        adj[v].push_back ( u );
+    }
+    dfs ( 1 );
+
     return 0;
 }

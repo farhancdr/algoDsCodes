@@ -1,85 +1,43 @@
-#include <bits/stdc++.h>
-
+#include<bits/stdc++.h>
 using namespace std;
 
-vector<bool> v;
-vector<vector<int>> g;
+#define optimize() ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 
-void bfsTraversal(int b)
-{
-    //Declare a queue to store all the nodes connected to b
+const int mx = 1e5+123;
+bool vis[mx];
+vector<int> adj[mx];
+
+void bfs(int b){
     queue<int> q;
-
-    //Insert b to queue
     q.push(b);
-
-    //mark b as visited
-    v[b] = true;
-
-    cout << "\n\nThe BFS Traversal is:  ";
-
-    while (!q.empty())
-    {
-        int a = q.front();
-        q.pop(); //delete the first element form queue
-
-        for (auto j = g[a].begin(); j != g[a].end(); j++)
-        {
-            if (!v[*j])
-            {
-                v[*j] = true;
-                q.push(*j);
+    vis[b] = true;
+    while(!q.empty()){
+        int u = q.front();
+        cout << u << " ";
+        q.pop();
+        for(auto v: adj[u]){
+            if(!vis[v]){
+                vis[v] = true;
+                q.push(v);
             }
         }
-        cout << a << "  ";
     }
-}
-
-void makeEdge(int a, int b)
-{
-    g[a].push_back(b); //an edge from a to b (directed graph)
 }
 
 int main()
 {
-    cout << "\n\nWelcome to Studytonight :-)\n\n\n";
-    cout << " =====  Program to demonstrate the Breadth First Search Algorithm, in CPP  ===== \n\n";
+    optimize();
 
-    cout << " =====  Note; The vertices are numbered from 0 to n-1.  ===== \n\n";
+    int n, m;
+    cin >> n >> m;
 
-    int n, e;
-
-    cout << "Enter the number of vertices: ";
-
-    cin >> n;
-
-    cout << "\n\nEnter the number of edges: ";
-
-    cin >> e;
-
-    v.assign(n, false);
-    g.assign(n, vector<int>());
-
-    int a, b, i;
-
-    cout << "Enter the edges with source and target vetex: \n ";
-
-    for (i = 0; i < e; i++)
-    {
-        cin >> a >> b;
-        makeEdge(a, b);
+    for ( int i = 1; i <= m; i++ ) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back ( v );
+        adj[v].push_back ( u );
     }
-
-    for (i = 0; i < n; i++)
-    {
-        //if the node i is unvisited
-        if (!v[i])
-        {
-            bfsTraversal(i);
-        }
-    }
-
-    cout << "\n\n\n";
+    bfs ( 1 );
 
     return 0;
 }
