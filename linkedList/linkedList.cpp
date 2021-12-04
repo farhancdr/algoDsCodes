@@ -70,6 +70,25 @@ void deleteLastNode(ListNode *&head) {
     temp->next = nullptr;
 }
 
+//swap two nodes
+void swapNodes(ListNode *&head, int position1, int position2) {
+    if (position1 == position2) {
+        return;
+    }
+    ListNode *temp1 = head;
+    ListNode *temp2 = head;
+    for (int i = 0; i < position1 - 1; i++) {
+        temp1 = temp1->next;
+    }
+    for (int i = 0; i < position2 - 1; i++) {
+        temp2 = temp2->next;
+    }
+    ListNode *temp3 = temp1->next;
+    temp1->next = temp2->next;
+    temp2->next = temp3;
+}
+
+
 //print the list
 void printList(ListNode *head) {
     ListNode *temp = head;
