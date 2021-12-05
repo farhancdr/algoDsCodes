@@ -2,5 +2,8 @@
     "files.associations": {
         "new": "cpp",
         "iostream": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "vect"
+    ]
 }
