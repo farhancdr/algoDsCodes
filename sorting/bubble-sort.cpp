@@ -1,39 +1,22 @@
-#include<iostream>
-#include<vector>
-
+#include "bits/stdc++.h"
 using namespace std;
 
-//Avg. Time Complexity: O(n^2)
-//Worst Time Complexity: O(n^2)
-//Extra Space Complexity: O(1)
-
 int main(){
-    
-    vector<int> a = {45, 56, 23, 8, 7, 4, 10, 34, 12, 25, 19};
-    int n = a.size();
+    int a[] = {4,5,3,8,9,1,2,7,6};
 
-    //bubble sort
+    int n = sizeof(a)/sizeof(a[0]);
 
-    int temp=0;
-    bool swapped = true;
-
-    //each while loop puts maximum
-    //element in a[0,..,n-1] at its place
-    while(swapped){
-        swapped = false;
-        for(int i=0; i<n-1; i++){
-            if(a[i]>a[i+1]){
-                //swap
-                temp = a[i];
-                a[i] = a[i+1];
-                a[i+1] = temp;
-                swapped = true;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n-2;j++){
+            if(a[j]>a[j+1]){
+                swap(a[j],a[j+1]);
             }
         }
-        n = n-1;
     }
+    
 
-    for(int num:a) cout << num << " ";
-    cout << endl;
-
+    for(int i=0;i<n;i++){
+        cout<<a[i]<<" ";
+    }
+    return 0;
 }
