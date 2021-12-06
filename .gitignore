@@ -33,3 +33,7 @@ fox.cpp
 *.exe
 *.out
 *.app
+
+# files to ignore
+
+jsTest.js

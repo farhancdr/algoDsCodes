@@ -26,6 +26,23 @@ TreeNode* inorder(TreeNode* root) {
     root->right = inorder(root->right);
     return root;
 }
+//preorder traversal of binary tree
+TreeNode* preorder(TreeNode* root) {
+    if(root == nullptr) return nullptr;
+    cout << root->val << " ";
+    root->left = preorder(root->left);
+    root->right = preorder(root->right);
+    return root;
+}
+
+// postorder traversal of binary tree
+TreeNode* postorder(TreeNode* root) {
+    if(root == nullptr) return nullptr;
+    root->left = postorder(root->left);
+    root->right = postorder(root->right);
+    cout << root->val << " ";
+    return root;
+}
 
 //get the minimum value in the binary tree
 TreeNode* minValue(TreeNode* root) {
@@ -35,10 +52,10 @@ TreeNode* minValue(TreeNode* root) {
 }
 
 //get the maximum value in the binary tree
-int maxValue(TreeNode* root) {
-    if(root == nullptr) return INT_MIN;
+TreeNode* maxValue(TreeNode* root) {
+    if(root == nullptr) return nullptr;
     while(root->right != nullptr) root = root->right;
-    return root->val;
+    return root;
 }
 
 //delete a node from the binary tree
@@ -71,6 +88,12 @@ int height(TreeNode* root) {
     return 1 + max(height(root->left), height(root->right));
 }
 
+//maximum depth of the binary tree
+int maxDepth(TreeNode* root) {
+    if(root == nullptr) return 0;
+    return 1 + max(maxDepth(root->left), maxDepth(root->right));
+}
+
 //count leaves in the binary tree
 int countLeaves(TreeNode* root) {
     if(root == nullptr) return 0;
@@ -78,7 +101,49 @@ int countLeaves(TreeNode* root) {
     return countLeaves(root->left) + countLeaves(root->right);
 }
 
+//check two binary trees are identical or not
+bool isIdentical(TreeNode* root1, TreeNode* root2) {
+    if(root1 == nullptr && root2 == nullptr) return true;
+    if(root1 == nullptr || root2 == nullptr) return false;
+    return (root1->val == root2->val) && isIdentical(root1->left, root2->left) && isIdentical(root1->right, root2->right);
+}
 
+//get the maximum path sum in the binary tree
+int maxPathSum(TreeNode* root) {
+    if(root == nullptr) return 0;
+    int left = max(0, maxPathSum(root->left));
+    int right = max(0, maxPathSum(root->right));
+    return max(root->val + left + right, max(left, right));
+}
+
+//mirror of the binary tree
+TreeNode* invertTree(TreeNode* root) {
+        if(!root) return root;
+        
+        swap(root->left,root->right);
+        
+        invertTree(root->left);
+        invertTree(root->right);
+        
+        return root;
+        
+}
+
+//check a tree is symmetric or not
+
+bool isSymmetricTest(TreeNode* p , TreeNode* q){
+    if(p == NULL && q == NULL) //left & right node is NULL 
+        return true; 
+    else if(p == NULL || q == NULL) //one of them is Not NULL
+        return false; 
+    else if(p->val!=q->val) 
+        return false;
+    return isSymmetricTest(p->left,q->right) && isSymmetricTest(p->right,q->left); //comparing left subtree's left child with right subtree's right child --AND-- comparing left subtree's right child with right subtree's left child
+}
+bool isSymmetric(TreeNode* root) {
+    if(root==NULL) return true; //Tree is empty
+    return isSymmetricTest(root->left,root->right);
+}
 
 //graphical representation of the binary tree
 void printTree(TreeNode* root) {
@@ -105,23 +170,24 @@ void printTree(TreeNode* root) {
 int main(int argc, const char** argv) {
 
     TreeNode* root = NULL;
-    root = insert(root, -1);
-    root = insert(root, 3);
-    root = insert(root, -15);
-    root = insert(root, 4);
+    root = insert(root, 5);
+    root = insert(root, 6);
+    root = insert(root, 2);
+    root = insert(root, 10);
+    root = insert(root, -5);
+    root = insert(root, 15);
     root = insert(root, 8);
-    root = insert(root, 9);
-    root = insert(root, 11);
-    root = insert(root, 7);
+    root = insert(root, 4);
     // deleteNode(root, 8);
     // inorder(root);
  
-    cout<< maxValue(root) << endl;
-    cout<< minValue(root) << endl;
+    // cout<< maxValue(root)->val << endl;
+    // cout<< minValue(root)->val << endl;
+    // cout<< maxDepth(root) << endl;
     
     // cout<< height(root) << endl;
 
-    // printTree(root);
+     isSymmetric(root)?cout<<"YES":cout<<"NO"<< endl;
     
     return 0;
 }
